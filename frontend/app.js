@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function tryLoadDeploymentInfo() {
   try {
-    const res = await fetch("../deployment-info.json");
+    const res = await fetch("deployment-info.json");
     if (res.ok) {
       const info = await res.json();
       contractAddress = info.contractAddress;
@@ -235,7 +235,7 @@ async function registerImage() {
   showModal("Registering Image...", "Please confirm the transaction in MetaMask");
 
   try {
-    const tx = await contract.registerImage(pendingImageHash, name, desc || "");
+    const tx = await contract.registerImage(pendingImageHash, name, desc || "", { gasLimit: 500000 });
     showModal("Mining Transaction...", `TX: ${tx.hash}`);
     document.getElementById("tx-modal-hash").textContent = tx.hash;
     document.getElementById("tx-modal-hash").classList.remove("hidden");
@@ -265,7 +265,7 @@ async function grantAccess() {
 
   showModal("Granting Access...", "Please confirm in MetaMask");
   try {
-    const tx = await contract.grantAccess(hash, addr);
+    const tx = await contract.grantAccess(hash, addr, { gasLimit: 500000 });
     await tx.wait();
     hideModal();
     showToast("Access granted successfully!", "success");
@@ -287,7 +287,7 @@ async function revokeAccess() {
 
   showModal("Revoking Access...", "Please confirm in MetaMask");
   try {
-    const tx = await contract.revokeAccess(hash, addr);
+    const tx = await contract.revokeAccess(hash, addr, { gasLimit: 500000 });
     await tx.wait();
     hideModal();
     showToast("Access revoked.", "success");
@@ -335,7 +335,7 @@ async function transferOwnership() {
 
   showModal("Transferring Ownership...", "Please confirm in MetaMask");
   try {
-    const tx = await contract.transferImageOwnership(hash, addr);
+    const tx = await contract.transferImageOwnership(hash, addr, { gasLimit: 500000 });
     await tx.wait();
     hideModal();
     showToast("Ownership transferred successfully!", "success");
