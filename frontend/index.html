@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ImageVault - Blockchain-based image asset management with hash IDs and cryptographic access control" />
+  <title>ImageVault | Blockchain Image Registry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Animated background -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+  <div class="bg-glow bg-glow-3"></div>
+
+  <!-- Header -->
+  <header id="app-header">
+    <div class="header-inner">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect x="2" y="2" width="28" height="28" rx="6" stroke="url(#g1)" stroke-width="2.5"/>
+            <path d="M10 16L14 20L22 12" stroke="url(#g1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <defs><linearGradient id="g1" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs>
+          </svg>
+        </div>
+        <span class="logo-text">ImageVault</span>
+      </div>
+      <div class="header-actions">
+        <div id="network-badge" class="badge badge-warning">
+          <span class="badge-dot"></span>
+          <span>Not Connected</span>
+        </div>
+        <button id="connect-btn" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Connect Wallet
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="app-main">
+    <!-- Stats Bar -->
+    <section id="stats-bar" class="glass-card stats-bar">
+      <div class="stat-item">
+        <span class="stat-value" id="stat-total">0</span>
+        <span class="stat-label">Total Images</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-value" id="stat-owned">0</span>
+        <span class="stat-label">You Own</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-value" id="stat-accessible">0</span>
+        <span class="stat-label">Accessible</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-value" id="stat-address">---</span>
+        <span class="stat-label">Your Address</span>
+      </div>
+    </section>
+
+    <!-- Tab Navigation -->
+    <nav id="tab-nav" class="tab-nav">
+      <button class="tab-btn active" data-tab="register">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Register Image
+      </button>
+      <button class="tab-btn" data-tab="gallery">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Image Gallery
+      </button>
+      <button class="tab-btn" data-tab="access">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Manage Access
+      </button>
+      <button class="tab-btn" data-tab="transfer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        Transfer
+      </button>
+    </nav>
+
+    <!-- Tab Content -->
+    <div id="tab-content">
+      <!-- Register Tab -->
+      <section id="tab-register" class="tab-panel active">
+        <div class="panel-header">
+          <h2>Register a New Image</h2>
+          <p>Upload an image to hash it and register on the blockchain. The SHA-256 hash becomes its unique ID.</p>
+        </div>
+        <div class="glass-card">
+          <div id="drop-zone" class="drop-zone">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <p>Drag & drop an image here, or <span class="drop-zone-link">browse</span></p>
+            <span class="drop-zone-hint">PNG, JPG, JPEG, GIF, BMP, WebP</span>
+            <input type="file" id="image-input" accept="image/*" hidden />
+          </div>
+          <div id="image-preview-area" class="image-preview-area hidden">
+            <img id="preview-img" src="" alt="Preview" />
+            <div class="preview-info">
+              <div class="preview-hash">
+                <span class="label">SHA-256 Hash:</span>
+                <code id="preview-hash-value">Computing...</code>
+              </div>
+              <div class="preview-meta">
+                <span id="preview-name">filename.png</span>
+                <span id="preview-size">0 KB</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="reg-name">Image Name</label>
+            <input type="text" id="reg-name" placeholder="e.g. X-Ray Hand Scan" class="input" />
+          </div>
+          <div class="form-group">
+            <label for="reg-desc">Description</label>
+            <textarea id="reg-desc" placeholder="Describe the image..." rows="3" class="input"></textarea>
+          </div>
+          <button id="register-btn" class="btn btn-primary btn-lg" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Register on Blockchain
+          </button>
+        </div>
+      </section>
+
+      <!-- Gallery Tab -->
+      <section id="tab-gallery" class="tab-panel">
+        <div class="panel-header">
+          <h2>Image Gallery</h2>
+          <p>View all images you own or have been granted access to.</p>
+        </div>
+        <div id="gallery-grid" class="gallery-grid">
+          <div class="empty-state">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <p>No images registered yet</p>
+            <span>Register your first image to see it here</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Access Tab -->
+      <section id="tab-access" class="tab-panel">
+        <div class="panel-header">
+          <h2>Manage Access</h2>
+          <p>Grant or revoke viewing access for your images to other wallet addresses.</p>
+        </div>
+        <div class="glass-card">
+          <div class="form-group">
+            <label for="access-hash">Image Hash</label>
+            <select id="access-hash" class="input">
+              <option value="">Select an image you own...</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="access-address">Wallet Address</label>
+              <input type="text" id="access-address" placeholder="0x..." class="input mono" />
+            </div>
+          </div>
+          <div class="btn-row">
+            <button id="grant-btn" class="btn btn-success">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Grant Access
+            </button>
+            <button id="revoke-btn" class="btn btn-danger">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              Revoke Access
+            </button>
+          </div>
+          <div id="check-access-area" class="check-access-area">
+            <h3>Check Access</h3>
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <input type="text" id="check-address" placeholder="Enter wallet address to check..." class="input mono" />
+              </div>
+              <button id="check-btn" class="btn btn-secondary">Check</button>
+            </div>
+            <div id="check-result" class="check-result hidden"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Transfer Tab -->
+      <section id="tab-transfer" class="tab-panel">
+        <div class="panel-header">
+          <h2>Transfer Ownership</h2>
+          <p>Transfer full ownership of an image to another wallet address.</p>
+        </div>
+        <div class="glass-card">
+          <div class="form-group">
+            <label for="transfer-hash">Image to Transfer</label>
+            <select id="transfer-hash" class="input">
+              <option value="">Select an image you own...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="transfer-address">New Owner Address</label>
+            <input type="text" id="transfer-address" placeholder="0x..." class="input mono" />
+          </div>
+          <div class="warning-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span>This action is irreversible. The new owner will have full control over the image.</span>
+          </div>
+          <button id="transfer-btn" class="btn btn-warning btn-lg">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            Transfer Ownership
+          </button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Transaction Modal -->
+  <div id="tx-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content glass-card">
+      <div class="spinner"></div>
+      <h3 id="tx-modal-title">Processing Transaction...</h3>
+      <p id="tx-modal-msg">Please confirm in your wallet</p>
+      <code id="tx-modal-hash" class="hidden"></code>
+    </div>
+  </div>
+
+  <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

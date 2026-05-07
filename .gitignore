@@ -1,0 +1,10 @@
+node_modules
+cache
+artifacts
+typechain-types
+coverage
+coverage.json
+*.log
+.env
+deployment-info.json
+ignition/deployments
